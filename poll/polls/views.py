@@ -1,10 +1,12 @@
-from django.http import HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.template import loader
+from django.urls import reverse
+from django.views import generic
 
-from .models import Question
+from .models import Choice, Question
 
-def IndexView(request):
+class IndexView(generic.ListView):
     template_name = 'polls/index.html'
     context_object_name = 'latest_question_list'
 
@@ -12,11 +14,11 @@ def IndexView(request):
         """Return the last five published questions."""
         return Question.objects.order_by('-pub_date')[:5]
 
-def DetailView(request, question_id):
+class DetailView(generic.DetailView):
     model = Question
     template_name = 'polls/detail.html'
 
-def ResultsView(request, question_id):
+class ResultsView(generic.DetailView):
     model = Question
     template_name = 'polls/results.html'
 
